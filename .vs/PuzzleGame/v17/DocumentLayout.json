@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Projects\\PuzzleGame\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EE80C96C-A26F-4826-F966-FF933B01D041}|Assembly-CSharp.csproj|d:\\projects\\puzzlegame\\assets\\scripts\\pausemenuui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EE80C96C-A26F-4826-F966-FF933B01D041}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\pausemenuui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EE80C96C-A26F-4826-F966-FF933B01D041}|Assembly-CSharp.csproj|D:\\Projects\\PuzzleGame\\assets\\scripts\\game_system.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EE80C96C-A26F-4826-F966-FF933B01D041}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\game_system.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EE80C96C-A26F-4826-F966-FF933B01D041}|Assembly-CSharp.csproj|D:\\Projects\\PuzzleGame\\assets\\scripts\\prefab.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EE80C96C-A26F-4826-F966-FF933B01D041}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\prefab.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EE80C96C-A26F-4826-F966-FF933B01D041}|Assembly-CSharp.csproj|D:\\Projects\\PuzzleGame\\assets\\scripts\\player_control.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EE80C96C-A26F-4826-F966-FF933B01D041}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player_control.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Game_System.cs",
+              "DocumentMoniker": "D:\\Projects\\PuzzleGame\\Assets\\Scripts\\Game_System.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Game_System.cs",
+              "ToolTip": "D:\\Projects\\PuzzleGame\\Assets\\Scripts\\Game_System.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Game_System.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAUwKEAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-02T18:16:36.043Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Player_Control.cs",
+              "DocumentMoniker": "D:\\Projects\\PuzzleGame\\Assets\\Scripts\\Player_Control.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Player_Control.cs",
+              "ToolTip": "D:\\Projects\\PuzzleGame\\Assets\\Scripts\\Player_Control.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Player_Control.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAA5wEoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-01T17:10:35.354Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Prefab.cs",
+              "DocumentMoniker": "D:\\Projects\\PuzzleGame\\Assets\\Scripts\\Prefab.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Prefab.cs",
+              "ToolTip": "D:\\Projects\\PuzzleGame\\Assets\\Scripts\\Prefab.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Prefab.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwCkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T17:34:47.502Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PauseMenuUI.cs",
+              "DocumentMoniker": "D:\\Projects\\PuzzleGame\\Assets\\Scripts\\PauseMenuUI.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\PauseMenuUI.cs",
+              "ToolTip": "D:\\Projects\\PuzzleGame\\Assets\\Scripts\\PauseMenuUI.cs",
+              "RelativeToolTip": "Assets\\Scripts\\PauseMenuUI.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAqwD4AAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-03T20:51:37.164Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
