@@ -22,7 +22,7 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
-        pauseUI.SetActive(true);    
+        pauseUI.SetActive(true);
     }
 
     void Awake()
@@ -50,10 +50,9 @@ public class PauseMenu : MonoBehaviour
         isAnimating = true;
 
         pauseButton.DORotate(new Vector3(0f, 0f, 360f), duration, RotateMode.FastBeyond360)
-        .SetEase(Ease.OutCubic);
+            .SetEase(Ease.OutCubic);
 
         pausePanel.SetActive(true);
-
 
         pauseText.DOAnchorPos(originalTextPos, duration).SetEase(Ease.OutBack);
         pauseMenu.DOAnchorPos(originalMenuPos, duration).SetEase(Ease.OutCubic);
@@ -62,15 +61,19 @@ public class PauseMenu : MonoBehaviour
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
             isAnimating = false;
+
+            // Pause game AFTER animation
+            Time.timeScale = 0f;
         });
     }
 
     public void HidePauseMenu()
     {
+        Time.timeScale = 1f;
         isAnimating = true;
 
         pauseButton.DORotate(new Vector3(0f, 0f, -360f), duration, RotateMode.FastBeyond360)
-        .SetEase(Ease.OutCubic);
+            .SetEase(Ease.OutCubic);
 
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;

@@ -19,7 +19,7 @@ public class Preview : MonoBehaviour
         previewInstance.transform.rotation = Quaternion.Euler(0f, 0f, randomRotation);
 
         Vector3 fixedPosition = previewInstance.transform.position;
-        fixedPosition.z = 0;
+        fixedPosition.z = -0.6f;
         previewInstance.transform.position = fixedPosition;
 
         previewInstance.transform.SetParent(spawnPoint);

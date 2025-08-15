@@ -41,18 +41,21 @@ public class Button_Manager : MonoBehaviour
 
     public void Restart()
     {
+        Time.timeScale = 1f;
         dataManager.SaveCurrentScore();
         loadingEffect.LoadSceneWithTransition("GameScene");
     }
 
     public void Menu()
     {
+        Time.timeScale = 1f;
         dataManager.SaveCurrentScore();
         loadingEffect.LoadSceneWithTransition("HomeScene");
     }
 
     public void Play()
     {
+        Time.timeScale = 1f;
         loadingEffect.LoadSceneWithTransition("GameScene");
     }
 
@@ -65,5 +68,10 @@ public class Button_Manager : MonoBehaviour
     {
         dataManager.ClearHistory();
         historyUI.OpenHistory();
+    }
+
+    public void Revive()
+    {
+        Ads_Manager.Instance.ShowReviveAd();
     }
 }
