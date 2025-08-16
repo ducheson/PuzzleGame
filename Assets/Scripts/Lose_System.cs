@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 public class Lose_System : MonoBehaviour
 {
-    public GameObject loseUI;
-    public GameObject panel; // Fade panel
+    public ResultMenu resultMenu;
     public float loseDelay = 1.5f;
 
     private Collider2D zoneCollider;
@@ -23,11 +22,8 @@ public class Lose_System : MonoBehaviour
         {
             Debug.LogWarning("Lose_System: Zone collider should have 'Is Trigger' checked.");
         }
-
-        if (panel != null)
-            panel.SetActive(false); // Hide until lose
-        if (loseUI != null)
-            loseUI.SetActive(false); // Hide until after fade
+        
+        resultMenu = ResultMenu.FindAnyObjectByType<ResultMenu>();
     }
 
     void Update()
@@ -78,45 +74,6 @@ public class Lose_System : MonoBehaviour
     void PlayerLose(GameObject obj)
     {
         hasLost.Add(obj);
-        StartCoroutine(SlowDownAndFade());
-    }
-
-    private IEnumerator SlowDownAndFade()
-    {
-        CanvasGroup cg = null;
-        if (panel != null)
-        {
-            panel.SetActive(true); // Activate now
-            cg = panel.GetComponent<CanvasGroup>();
-            if (cg == null) cg = panel.AddComponent<CanvasGroup>();
-            cg.alpha = 0f;
-        }
-
-        float duration = 2f;
-        float elapsed = 0f;
-        float startScale = 1f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.unscaledDeltaTime;
-            float t = elapsed / duration;
-
-            // Slow time from 1 → 0
-            Time.timeScale = Mathf.Lerp(startScale, 0f, t);
-
-            // Fade alpha from 0 → 1
-            if (cg != null)
-                cg.alpha = t;
-
-            yield return null;
-        }
-
-        // Ensure fully faded & time stopped
-        Time.timeScale = 0f;
-        if (cg != null) cg.alpha = 1f;
-
-        // Show loseUI AFTER fade is done
-        if (loseUI != null)
-            loseUI.SetActive(true);
+        resultMenu.ShowResultMenu();
     }
 }

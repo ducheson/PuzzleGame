@@ -1,14 +1,13 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class PauseMenu : MonoBehaviour
+public class ResultMenu : MonoBehaviour
 {
     [Header("UI Elements")]
-    public GameObject pauseUI;
-    public GameObject pausePanel;
-    public RectTransform pauseText;
-    public RectTransform pauseMenu;
-    public RectTransform pauseButton;
+    public GameObject resultUI;
+    public GameObject resultPanel;
+    public RectTransform resultText;
+    public RectTransform resultMenu;
 
     [Header("Animation Settings")]
     public Vector2 hiddenPos = new Vector2(0f, 2000f);
@@ -22,44 +21,39 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
-        pauseUI.SetActive(true);
+        resultUI.SetActive(true);
     }
 
     void Awake()
     {
         // Ensure CanvasGroup exists
-        canvasGroup = pausePanel.GetComponent<CanvasGroup>();
+        canvasGroup = resultPanel.GetComponent<CanvasGroup>();
         if (canvasGroup == null)
-            canvasGroup = pausePanel.AddComponent<CanvasGroup>();
+            canvasGroup = resultPanel.AddComponent<CanvasGroup>();
 
         // Cache original positions
-        originalTextPos = pauseText.anchoredPosition;
-        originalMenuPos = pauseMenu.anchoredPosition;
+        originalTextPos = resultText.anchoredPosition;
+        originalMenuPos = resultMenu.anchoredPosition;
 
         // Initialize state
-        pausePanel.SetActive(false);
-        pauseText.anchoredPosition = hiddenPos;
-        pauseMenu.anchoredPosition = hiddenPos;
+        resultPanel.SetActive(false);
+        resultText.anchoredPosition = hiddenPos;
+        resultMenu.anchoredPosition = hiddenPos;
         canvasGroup.alpha = 0f;
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
     }
 
-    public void ShowPauseMenu()
+    public void ShowResultMenu()
     {
         isAnimating = true;
         Time.timeScale = 0f;
 
-        pausePanel.SetActive(true);
-
-        // Rotate button ignoring timescale
-        pauseButton.DORotate(new Vector3(0f, 0f, 360f), duration, RotateMode.FastBeyond360)
-            .SetEase(Ease.OutCubic)
-            .SetUpdate(true);
+        resultPanel.SetActive(true);
 
         // Animate text, menu, and fade canvas ignoring timescale
-        pauseText.DOAnchorPos(originalTextPos, duration).SetEase(Ease.OutBack).SetUpdate(true);
-        pauseMenu.DOAnchorPos(originalMenuPos, duration).SetEase(Ease.OutCubic).SetUpdate(true);
+        resultText.DOAnchorPos(originalTextPos, duration).SetEase(Ease.OutBack).SetUpdate(true);
+        resultMenu.DOAnchorPos(originalMenuPos, duration).SetEase(Ease.OutCubic).SetUpdate(true);
         canvasGroup.DOFade(1f, duration).SetEase(Ease.OutSine).SetUpdate(true).OnComplete(() =>
         {
             canvasGroup.interactable = true;
@@ -68,24 +62,19 @@ public class PauseMenu : MonoBehaviour
         });
     }
 
-    public void HidePauseMenu()
+    public void HideResultMenu()
     {
         isAnimating = true;
 
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
 
-        // Rotate button ignoring timescale
-        pauseButton.DORotate(new Vector3(0f, 0f, -360f), duration, RotateMode.FastBeyond360)
-            .SetEase(Ease.OutCubic)
-            .SetUpdate(true);
-
         // Animate text, menu, and fade canvas ignoring timescale
-        pauseText.DOAnchorPos(hiddenPos, duration).SetEase(Ease.InBack).SetUpdate(true);
-        pauseMenu.DOAnchorPos(hiddenPos, duration).SetEase(Ease.InCubic).SetUpdate(true);
+        resultText.DOAnchorPos(hiddenPos, duration).SetEase(Ease.InBack).SetUpdate(true);
+        resultMenu.DOAnchorPos(hiddenPos, duration).SetEase(Ease.InCubic).SetUpdate(true);
         canvasGroup.DOFade(0f, duration).SetEase(Ease.InSine).SetUpdate(true).OnComplete(() =>
         {
-            pausePanel.SetActive(false);
+            resultPanel.SetActive(false);
             isAnimating = false;
 
             // Resume game after animation completes

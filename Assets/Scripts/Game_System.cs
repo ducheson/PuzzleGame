@@ -26,7 +26,7 @@ public class Game_System : MonoBehaviour
         else if (Instance != this)
             Destroy(gameObject);
     }
-    
+
     void Start()
     {
         pointSystem = Point_System.Instance;
@@ -71,7 +71,7 @@ public class Game_System : MonoBehaviour
         nextPrefab = spawnObjects[randomIndex];
 
         randomRotation = UnityEngine.Random.Range(0f, 360f);
-        preview.CreateCurrentPreviewInstance(currentPrefab,randomRotation);
+        preview.CreateCurrentPreviewInstance(currentPrefab, randomRotation);
     }
 
     private IEnumerator SpawnCooldown()
@@ -103,5 +103,23 @@ public class Game_System : MonoBehaviour
         pointSystem.UpdatePoint(index);
 
         return instance;
+    }
+    
+    public void ResetGame()
+    {
+        // Find all objects with the tag "Prefab" and destroy them
+        GameObject[] existingFruits = GameObject.FindGameObjectsWithTag("Prefab");
+        foreach (GameObject fruit in existingFruits)
+        {
+            Destroy(fruit);
+        }
+
+        // Optionally, reset current and next prefabs
+        currentPrefab = null;
+        nextPrefab = null;
+
+        // Regenerate next prefab for preview
+        GenerateNextPrefab();
+        GenerateNextPrefab();
     }
 }

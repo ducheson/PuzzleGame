@@ -6,6 +6,7 @@ public class Button_Manager : MonoBehaviour
 {
     private bool isPause = false;
     private PauseMenu pauseMenu;
+    private ResultMenu resultMenu;
     private Data_Manager dataManager;
 
     private LoadingEffect loadingEffect;
@@ -18,6 +19,7 @@ public class Button_Manager : MonoBehaviour
         loadingEffect = LoadingEffect.Instance;
 
         pauseMenu = PauseMenu.FindAnyObjectByType<PauseMenu>();
+        resultMenu = ResultMenu.FindAnyObjectByType<ResultMenu>();
         historyUI = HistoryUI.FindAnyObjectByType<HistoryUI>();
     }
 
@@ -43,7 +45,14 @@ public class Button_Manager : MonoBehaviour
     {
         Time.timeScale = 1f;
         dataManager.SaveCurrentScore();
-        loadingEffect.LoadSceneWithTransition("GameScene");
+
+        Point_System.Instance.ResetPoint();
+        Time_System.Instance.ResetTime();
+        Game_System.Instance.ResetGame();
+
+        if (isPause)
+            TogglePause();
+        resultMenu.HideResultMenu();
     }
 
     public void Menu()

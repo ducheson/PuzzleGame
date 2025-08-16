@@ -1,17 +1,23 @@
 using UnityEngine;
 using GoogleMobileAds.Api;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Ads_Manager : MonoBehaviour
 {
     public static Ads_Manager Instance;
 
+    // Rewarded Ad
     private RewardedAd rewardedAd;
-    private string adUnitId = "ca-app-pub-3940256099942544/5224354917"; // TEST ID
+    private string rewardedAdUnitId = "ca-app-pub-3940256099942544/5224354917"; // TEST ID
+
+    // Banner Ad
+    private BannerView bannerView;
+    private string bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"; // TEST Banner ID
 
     // Events
-    public Action OnRewardEarned;   // Triggered when player earns reward
-    public Action OnAdClosed;       // Triggered when ad is closed
+    public Action OnRewardEarned;
+    public Action OnAdClosed;
 
     private void Awake()
     {
@@ -19,6 +25,9 @@ public class Ads_Manager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            // Subscribe to sceneLoaded event
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -31,14 +40,16 @@ public class Ads_Manager : MonoBehaviour
         MobileAds.Initialize(initStatus =>
         {
             LoadRewardedAd();
+            LoadBannerAd(); // Load banner immediately for first scene
         });
     }
 
+    #region Rewarded Ad
     private void LoadRewardedAd()
     {
         AdRequest request = new AdRequest();
 
-        RewardedAd.Load(adUnitId, request, (RewardedAd ad, LoadAdError error) =>
+        RewardedAd.Load(rewardedAdUnitId, request, (RewardedAd ad, LoadAdError error) =>
         {
             if (error != null || ad == null)
             {
@@ -48,8 +59,6 @@ public class Ads_Manager : MonoBehaviour
 
             rewardedAd = ad;
             Debug.Log("Rewarded ad loaded successfully.");
-
-            // Register event handlers
             rewardedAd.OnAdFullScreenContentClosed += HandleAdClosed;
             rewardedAd.OnAdFullScreenContentFailed += HandleAdFailedToShow;
         });
@@ -62,8 +71,6 @@ public class Ads_Manager : MonoBehaviour
             rewardedAd.Show((Reward reward) =>
             {
                 Debug.Log($"Player earned reward: {reward.Amount} {reward.Type}");
-                
-                // Trigger the external callback for reward
                 OnRewardEarned?.Invoke();
             });
         }
@@ -77,11 +84,8 @@ public class Ads_Manager : MonoBehaviour
     private void HandleAdClosed()
     {
         Debug.Log("Rewarded ad closed.");
-
-        // Trigger external callback for ad closed
         OnAdClosed?.Invoke();
-
-        LoadRewardedAd(); // Preload next
+        LoadRewardedAd();
     }
 
     private void HandleAdFailedToShow(AdError adError)
@@ -89,4 +93,65 @@ public class Ads_Manager : MonoBehaviour
         Debug.LogError($"Ad failed to show: {adError}");
         LoadRewardedAd();
     }
+    #endregion
+
+    #region Banner Ad
+    public void LoadBannerAd()
+    {
+        // Destroy any existing banner first
+        if (bannerView != null)
+        {
+            bannerView.Destroy();
+            bannerView = null;
+        }
+
+        // Get adaptive banner size based on current screen width
+        AdSize adaptiveSize = AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(Screen.width);
+
+        // Create banner with adaptive size
+        bannerView = new BannerView(bannerAdUnitId, adaptiveSize, AdPosition.Bottom);
+
+        // Load ad
+        AdRequest request = new AdRequest();
+        bannerView.LoadAd(request);
+
+        // Show immediately
+        bannerView.Show();
+    }
+
+    public void ShowBanner()
+    {
+        // If banner exists, show it; if not, reload
+        if (bannerView != null)
+        {
+            bannerView.Show();
+        }
+        else
+        {
+            LoadBannerAd();
+        }
+    }
+
+    public void HideBanner()
+    {
+        if (bannerView != null)
+        {
+            bannerView.Hide();
+        }
+    }
+    #endregion
+
+    #region Scene Handling
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Automatically show banner whenever a new scene loads
+        LoadBannerAd();
+        ShowBanner();
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    #endregion
 }

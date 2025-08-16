@@ -19,4 +19,9 @@ public class Point_System : MonoBehaviour
     {
         return currentPoint;
     }
+
+    public void ResetPoint()
+    {
+        currentPoint = 0;
+    }
 }

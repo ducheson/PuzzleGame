@@ -72,7 +72,7 @@ public class TransparentBack : MonoBehaviour
     private void SetTransparent()
     {
         Color transparentColor = originalColor;
-        transparentColor.a = 0.6f;
+        transparentColor.a = 0.25f;
         spriteRenderer.color = transparentColor;
     }
 

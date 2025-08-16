@@ -33,4 +33,9 @@ public class Time_System : MonoBehaviour
     {
         isCounting = false;
     }
+
+    public void ResetTime()
+    {
+        currentTime = 0;
+    }
 }
