@@ -82,6 +82,44 @@ public class ResultMenu : MonoBehaviour
         });
     }
 
+    // ⏩ Instantly show menu (no animation)
+    public void ShowImmediateMenu()
+    {
+        DOTween.Kill(resultText);
+        DOTween.Kill(resultMenu);
+        DOTween.Kill(canvasGroup);
+
+        Time.timeScale = 0f;
+
+        resultPanel.SetActive(true);
+        resultText.anchoredPosition = originalTextPos;
+        resultMenu.anchoredPosition = originalMenuPos;
+
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+
+        isAnimating = false;
+    }
+
+    // ⏩ Instantly hide menu (no animation)
+    public void HideImmediateMenu()
+    {
+        DOTween.Kill(resultText);
+        DOTween.Kill(resultMenu);
+        DOTween.Kill(canvasGroup);
+
+        resultPanel.SetActive(false);
+        resultText.anchoredPosition = hiddenPos;
+        resultMenu.anchoredPosition = hiddenPos;
+
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
+        isAnimating = false;
+    }
+
     public bool IsAnimating()
     {
         return isAnimating;

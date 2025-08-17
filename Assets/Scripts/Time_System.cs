@@ -37,5 +37,6 @@ public class Time_System : MonoBehaviour
     public void ResetTime()
     {
         currentTime = 0;
+        StartTimer();
     }
 }

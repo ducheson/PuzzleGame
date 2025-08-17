@@ -110,6 +110,13 @@ public class Data_Manager : MonoBehaviour
         return new List<int>(highestScore);
     }
 
+    public void ResetCurrentData()
+    {
+        Point_System.Instance.ResetPoint();
+        Time_System.Instance.ResetTime();
+        Game_System.Instance.ResetGame();
+    }
+
     public void ClearHistory()
     {
         latestScore.Clear();

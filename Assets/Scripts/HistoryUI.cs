@@ -16,7 +16,7 @@ public class HistoryUI : MonoBehaviour
 
     [Header("Others")]
     public GameObject panel;
-    
+
     public Sprite[] rankSprites;
 
     public void Start()
@@ -119,9 +119,10 @@ public class HistoryUI : MonoBehaviour
             UpdateHighest();
             panel.SetActive(true);
         }
-        else
-        {
-            panel.SetActive(false);
-        }
+    }
+
+    public void CloseHistory()
+    {
+        panel.SetActive(false);
     }
 }

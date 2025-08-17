@@ -59,8 +59,26 @@ public class Ads_Manager : MonoBehaviour
 
             rewardedAd = ad;
             Debug.Log("Rewarded ad loaded successfully.");
-            rewardedAd.OnAdFullScreenContentClosed += HandleAdClosed;
-            rewardedAd.OnAdFullScreenContentFailed += HandleAdFailedToShow;
+
+            // Register ALL events
+            rewardedAd.OnAdFullScreenContentClosed += () =>
+            {
+                Debug.Log("Rewarded ad closed.");
+                OnAdClosed?.Invoke();
+                LoadRewardedAd(); // Preload next ad
+            };
+
+            rewardedAd.OnAdFullScreenContentFailed += (AdError adError) =>
+            {
+                Debug.LogError($"Ad failed to show: {adError}");
+                OnAdClosed?.Invoke(); // still fire closed so systems can continue
+                LoadRewardedAd();
+            };
+
+            rewardedAd.OnAdFullScreenContentOpened += () =>
+            {
+                Debug.Log("Rewarded ad opened.");
+            };
         });
     }
 
@@ -76,8 +94,11 @@ public class Ads_Manager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Rewarded ad not ready—cannot trigger reward now.");
+            Debug.Log("Rewarded ad not ready—reloading.");
             LoadRewardedAd();
+
+            // 🔑 Optional: still invoke OnAdClosed so revive system knows nothing happened
+            OnAdClosed?.Invoke();
         }
     }
 

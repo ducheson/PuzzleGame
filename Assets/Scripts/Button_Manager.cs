@@ -8,22 +8,36 @@ public class Button_Manager : MonoBehaviour
     private PauseMenu pauseMenu;
     private ResultMenu resultMenu;
     private Data_Manager dataManager;
-
-    private LoadingEffect loadingEffect;
     private HistoryUI historyUI;
+    private HomeMenu homeMenu;
+    private CameraManager cameraManager;
+    private Revive_System revive_System;
 
     private void Start()
     {
         dataManager = Data_Manager.Instance;
 
-        loadingEffect = LoadingEffect.Instance;
-
         pauseMenu = PauseMenu.FindAnyObjectByType<PauseMenu>();
         resultMenu = ResultMenu.FindAnyObjectByType<ResultMenu>();
         historyUI = HistoryUI.FindAnyObjectByType<HistoryUI>();
+        homeMenu = HomeMenu.FindAnyObjectByType<HomeMenu>();
+        cameraManager = CameraManager.FindAnyObjectByType<CameraManager>();
+        revive_System = Revive_System.FindAnyObjectByType<Revive_System>();
     }
 
-    public void TogglePause()
+    public void Pause()
+    {
+        if (pauseMenu.IsAnimating()) return;
+
+        if (!isPause)
+        {
+            isPause = true;
+            Time_System.Instance.StopTimer();
+            pauseMenu.ShowPauseMenu();
+        }
+    }
+
+    public void UnPause()
     {
         if (pauseMenu.IsAnimating()) return;
 
@@ -33,44 +47,77 @@ public class Button_Manager : MonoBehaviour
             Time_System.Instance.StartTimer();
             pauseMenu.HidePauseMenu();
         }
-        else
+    }
+
+    public void UnPauseImediate()
+    {
+        if (pauseMenu.IsAnimating()) return;
+
+        if (isPause)
         {
-            isPause = true;
-            Time_System.Instance.StopTimer();
-            pauseMenu.ShowPauseMenu();
+            isPause = false;
+            pauseMenu.HideImmediateMenu();
         }
     }
 
     public void Restart()
     {
-        Time.timeScale = 1f;
-        dataManager.SaveCurrentScore();
+        LoadingEffect.Instance.LoadInEffect(() =>
+        {
+            Time.timeScale = 1f;
+            dataManager.SaveCurrentScore();
+            dataManager.ResetCurrentData();
+            revive_System.ResetRevive();
 
-        Point_System.Instance.ResetPoint();
-        Time_System.Instance.ResetTime();
-        Game_System.Instance.ResetGame();
-
-        if (isPause)
-            TogglePause();
-        resultMenu.HideResultMenu();
-    }
-
-    public void Menu()
-    {
-        Time.timeScale = 1f;
-        dataManager.SaveCurrentScore();
-        loadingEffect.LoadSceneWithTransition("HomeScene");
+            UnPauseImediate();
+            resultMenu.HideImmediateMenu();
+            
+            LoadingEffect.Instance.LoadOutEffect();
+        });
     }
 
     public void Play()
     {
-        Time.timeScale = 1f;
-        loadingEffect.LoadSceneWithTransition("GameScene");
+        LoadingEffect.Instance.LoadInEffect(() =>
+        {
+            Time.timeScale = 1f;
+            dataManager.ResetCurrentData();
+            revive_System.ResetRevive();
+            
+            homeMenu.HideHomeMenu();
+            cameraManager.ShowMainView();
+
+            LoadingEffect.Instance.LoadOutEffect();
+        });
     }
 
-    public void ToggleHistory()
+    public void Menu()
+    {
+        LoadingEffect.Instance.LoadInEffect(() =>
+        {
+            Time.timeScale = 1f;
+            dataManager.SaveCurrentScore();
+            dataManager.ResetCurrentData();
+            revive_System.ResetRevive();
+
+            UnPauseImediate();
+            resultMenu.HideImmediateMenu();
+
+            homeMenu.ShowHomeMenu();
+            cameraManager.ShowFilteredView();
+
+            LoadingEffect.Instance.LoadOutEffect();
+        });
+    }
+
+    public void OpenHistory()
     {
         historyUI.OpenHistory();
+    }
+
+    public void CloseHistory()
+    {
+        historyUI.CloseHistory();
     }
 
     public void ClearHistory()
@@ -81,6 +128,9 @@ public class Button_Manager : MonoBehaviour
 
     public void Revive()
     {
-        Ads_Manager.Instance.ShowReviveAd();
+        if (!revive_System.hasWatchedAd)
+            Ads_Manager.Instance.ShowReviveAd();
+        else
+            revive_System.Revive();
     }
 }

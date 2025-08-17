@@ -93,6 +93,48 @@ public class PauseMenu : MonoBehaviour
         });
     }
 
+    // ⏩ Instantly show menu (no animation)
+    public void ShowImmediateMenu()
+    {
+        // Kill all running tweens just in case
+        DOTween.Kill(pauseText);
+        DOTween.Kill(pauseMenu);
+        DOTween.Kill(canvasGroup);
+        DOTween.Kill(pauseButton);
+
+        Time.timeScale = 0f;
+
+        pausePanel.SetActive(true);
+        pauseText.anchoredPosition = originalTextPos;
+        pauseMenu.anchoredPosition = originalMenuPos;
+
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+
+        isAnimating = false;
+    }
+
+    // ⏩ Instantly hide menu (no animation)
+    public void HideImmediateMenu()
+    {
+        DOTween.Kill(pauseText);
+        DOTween.Kill(pauseMenu);
+        DOTween.Kill(canvasGroup);
+        DOTween.Kill(pauseButton);
+
+        pausePanel.SetActive(false);
+        pauseText.anchoredPosition = hiddenPos;
+        pauseMenu.anchoredPosition = hiddenPos;
+
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
+        Time.timeScale = 1f;
+        isAnimating = false;
+    }
+
     public bool IsAnimating()
     {
         return isAnimating;

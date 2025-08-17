@@ -35,29 +35,38 @@ public class LoadingEffect : MonoBehaviour
         topOriginalPos = top.anchoredPosition;
         bottomOriginalPos = bottom.anchoredPosition;
 
-        top.anchoredPosition = topOriginalPos + new Vector2(0, 0);
-        bottom.anchoredPosition = bottomOriginalPos - new Vector2(0, 0);
+        top.anchoredPosition = topOriginalPos;
+        bottom.anchoredPosition = bottomOriginalPos;
     }
 
-    public void LoadSceneWithTransition(string sceneName)
+    public void LoadInEffect(System.Action onComplete = null)
     {
-        // Animate into center
-        top.DOAnchorPos(Vector2.zero, animationDuration).SetEase(Ease.OutCubic);
-        bottom.DOAnchorPos(Vector2.zero, animationDuration).SetEase(Ease.OutCubic)
-            .OnComplete(() =>
-            {
-                // Load scene after both panels finish moving in
-                SceneManager.sceneLoaded += OnSceneLoaded;
-                SceneManager.LoadScene(sceneName);
-            });
+        Sequence seq = DOTween.Sequence().SetUpdate(true); // ✅ ignore Time.timeScale
+
+        seq.Append(top.DOAnchorPos(Vector2.zero, animationDuration)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true));
+
+        seq.Join(bottom.DOAnchorPos(Vector2.zero, animationDuration)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true));
+
+        seq.OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public void LoadOutEffect()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        Sequence seq = DOTween.Sequence().SetUpdate(true); // ✅ ignore Time.timeScale
 
-        // Animate out after scene loads
-        top.DOAnchorPos(topOriginalPos, animationDuration).SetEase(Ease.InCubic);
-        bottom.DOAnchorPos(bottomOriginalPos, animationDuration).SetEase(Ease.InCubic);
+        seq.Append(top.DOAnchorPos(topOriginalPos, animationDuration)
+            .SetEase(Ease.InCubic)
+            .SetUpdate(true));
+
+        seq.Join(bottom.DOAnchorPos(bottomOriginalPos, animationDuration)
+            .SetEase(Ease.InCubic)
+            .SetUpdate(true));
     }
 }

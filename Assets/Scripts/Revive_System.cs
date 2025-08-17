@@ -1,23 +1,40 @@
+using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI; // Needed for Button & Image
 
 public class Revive_System : MonoBehaviour
 {
-    public GameObject loseUI;
-    public GameObject panel;
+    private ResultMenu resultMenu;
     public Button reviveButton; // Assign in Inspector
+    public TextMeshProUGUI extraLiveText;
+    public TextMeshProUGUI reviveText;
     public Material disabledMaterial; // Assign a material for gray-out effect
+    private Material originalMaterial; // Store the original button material
 
-    private bool hasWatchedAd = false;
+    public bool hasWatchedAd = false;
     private bool hasRevived = false; // Prevent multiple revives
 
-    private void Awake()
+    void Start()
     {
+        resultMenu = ResultMenu.FindAnyObjectByType<ResultMenu>();
+
+        if (reviveButton != null)
+        {
+            Image btnImage = reviveButton.GetComponent<Image>();
+            if (btnImage != null)
+                originalMaterial = btnImage.material; // save original material
+        }
+
         if (Ads_Manager.Instance != null)
         {
             Ads_Manager.Instance.OnRewardEarned += OnRewardEarned;
             Ads_Manager.Instance.OnAdClosed += OnAdClosed;
+        }
+        else
+        {
+            Debug.LogError("Ads_Manager not found in scene!");
         }
     }
 
@@ -28,18 +45,6 @@ public class Revive_System : MonoBehaviour
             Ads_Manager.Instance.OnRewardEarned -= OnRewardEarned;
             Ads_Manager.Instance.OnAdClosed -= OnAdClosed;
         }
-    }
-
-    private void OnRewardEarned()
-    {
-        if (hasRevived)
-        {
-            Debug.Log("Revive already used – ignoring reward.");
-            return;
-        }
-
-        Debug.Log("Player earned revive reward!");
-        hasWatchedAd = true;
     }
 
     private void OnAdClosed()
@@ -58,23 +63,48 @@ public class Revive_System : MonoBehaviour
             return;
         }
 
-        StartCoroutine(ReviveAfterDelay());
+        // Delay so SDK restores timescale first
+        StartCoroutine(DelayPauseAfterAd());
+    }
+
+    private IEnumerator DelayPauseAfterAd()
+    {
+        yield return null; // wait 1 frame
+        Time.timeScale = 0f;
+        Debug.Log("Time paused after ad closed.");
+    }
+
+    private void OnRewardEarned()
+    {
+        if (hasRevived)
+        {
+            Debug.Log("Revive already used – ignoring reward.");
+            return;
+        }
+
+        Debug.Log("Player earned revive reward!");
+        hasWatchedAd = true;
+
+        // Show revive text, hide extra live text
+        if (extraLiveText != null) extraLiveText.gameObject.SetActive(false);
+        if (reviveText != null) reviveText.gameObject.SetActive(true);
+    }
+
+    public void Revive()
+    {
+        if (hasWatchedAd)
+        {
+            resultMenu.HideImmediateMenu();
+            StartCoroutine(ReviveAfterDelay());
+        }
     }
 
     private IEnumerator ReviveAfterDelay()
     {
         Debug.Log("Reviving player after ad.");
 
-        if (loseUI != null)
-        {
-            loseUI.SetActive(false);
-            panel.SetActive(false);
-        }
+        yield return null;
 
-        yield return null; // Wait one frame so ad SDK restores timeScale
-
-        Time.timeScale = 0f;
-        
         Prefab[] allPrefabs = GameObject.FindObjectsByType<Prefab>(FindObjectsSortMode.None);
 
         var targetPrefabs = new System.Collections.Generic.List<Prefab>();
@@ -87,13 +117,9 @@ public class Revive_System : MonoBehaviour
 
         int prefabCount = targetPrefabs.Count;
 
-        // Logarithmic scaling: grows slower as count increases
-        // Base case: 5 prefabs = 2 sec
-        // Formula: 2f + log10(prefabCount / 5f + 1) * scale
-        float scaleFactor = 2f; // How fast it grows
+        float scaleFactor = 2f; 
         float totalTime = 2f + Mathf.Log10(prefabCount / 5f + 1f) * scaleFactor;
 
-        // Ensure at least 0.05 sec delay per prefab
         float delayPerPrefab = Mathf.Max(0.05f, totalTime / Mathf.Max(1, prefabCount));
 
         Debug.Log($"Removing {prefabCount} prefabs over {totalTime:F2} seconds (delay {delayPerPrefab:F2}s each).");
@@ -105,8 +131,6 @@ public class Revive_System : MonoBehaviour
         }
 
         Time.timeScale = 1f;
-
-        Debug.Log("Removed all prefabs with index 0–2 and resumed game.");
 
         hasRevived = true;
 
@@ -121,5 +145,24 @@ public class Revive_System : MonoBehaviour
         }
 
         hasWatchedAd = false;
+    }
+
+    public void ResetRevive()
+    {
+        hasRevived = false;
+
+        // Re-enable revive button
+        if (reviveButton != null)
+        {
+            reviveButton.interactable = true;
+
+            Image btnImage = reviveButton.GetComponent<Image>();
+            if (btnImage != null && originalMaterial != null)
+                btnImage.material = originalMaterial;
+        }
+
+        // Reset UI state
+        if (extraLiveText != null) extraLiveText.gameObject.SetActive(true);
+        if (reviveText != null) reviveText.gameObject.SetActive(false);
     }
 }
